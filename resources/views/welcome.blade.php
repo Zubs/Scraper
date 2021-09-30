@@ -14,6 +14,7 @@
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">Address</th>
+        <th scope="col">Link</th>
     </tr>
     </thead>
     <tbody>
@@ -23,6 +24,7 @@
                 <th scope="row">{{ $loop->iteration }}</th>
                 <td>{{ $company['name'] }}</td>
                 <td>{{ $company['address'] }}</td>
+                <td>{{ $company['link'] }}</td>
             </tr>
         @endif
     @empty

@@ -8,21 +8,6 @@ use Goutte\Client;
 class ScraperController extends Controller
 {
     /**
-     * TODOS
-     * All paint company's in Lagos
-     * Painters in Lagos
-     * Interior decor in Lagos
-     * Suppliers of Paints and POP ceilings
-     * Distributors of Paints in Lagos
-     * Painting company In Lagos.
-     * Furniture making companies in Lagos.
-     *
-     * Location, Contact details, and any other important info
-     *
-     * Site link: https://invoice.ng/blog/business-listing-sites-in-nigeria/
-     */
-
-    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -40,6 +25,7 @@ class ScraperController extends Controller
                 return [
                     'name' => $name,
                     'address' => $address,
+                    'link' => 'https://www.businesslist.com.ng/category/interior-design/city:lagos' . $node->children()->first()->children('a')->attr('href'),
                 ];
             }
         });
@@ -57,17 +43,11 @@ class ScraperController extends Controller
         $website = $client->request('GET', 'https://www.businesslist.com.ng/category/interior-design/city:lagos');
 
         $companies = $website->filter('.company')->each(function ($node) {
-            return [
-                'nodeName' => $node->nodeName(),
-                'attributes' => [
-                    'class' => $node->attr('class'),
-                    'id' => $node->attr('id'),
-                ],
-                'html' => $node->html(),
-                'outerHTML' => $node->outerHtml()
-            ];
+            if ($node->children()->eq(0)->text()) {
+                dump($node->children()->first()->children('a')->attr('href'));
+            }
         });
 
-        dump($companies);
+        // dump($companies);
     }
 }
