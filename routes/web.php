@@ -15,3 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [ScraperController::class, 'index']);
+
+Route::get('/test', [ScraperController::class, 'test']);

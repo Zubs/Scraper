@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Goutte;
+use Goutte\Client;
 
 class ScraperController extends Controller
 {
@@ -27,76 +27,47 @@ class ScraperController extends Controller
      */
     public function index()
     {
-        $crawler = Goutte::request('GET', 'https://duckduckgo.com/html/?q=Laravel');
-        $links = $crawler->filter('.result__title .result__a')->each(function ($node) {
-            return $node->text();
+        $client = new Client();
+
+        // Send request to the website
+        $website = $client->request('GET', 'https://www.businesslist.com.ng/category/interior-design/city:lagos');
+
+        $companies = $website->filter('.company')->each(function ($node) {
+            if ($node->children()->eq(0)->text()) {
+                $name = $node->children()->eq(0)->text();
+                $address = $node->children()->eq(1)->text();
+
+                return [
+                    'name' => $name,
+                    'address' => $address,
+                ];
+            }
         });
-        return view('welcome')->with('links', $links);
+
+        $companies = array_values(array_filter($companies));
+
+        return view('welcome')->with('companies', $companies);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function test ()
     {
-        //
-    }
+        $client = new Client();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Send request to the website
+        $website = $client->request('GET', 'https://www.businesslist.com.ng/category/interior-design/city:lagos');
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $companies = $website->filter('.company')->each(function ($node) {
+            return [
+                'nodeName' => $node->nodeName(),
+                'attributes' => [
+                    'class' => $node->attr('class'),
+                    'id' => $node->attr('id'),
+                ],
+                'html' => $node->html(),
+                'outerHTML' => $node->outerHtml()
+            ];
+        });
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        dump($companies);
     }
 }
