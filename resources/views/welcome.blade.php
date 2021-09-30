@@ -8,13 +8,14 @@
 </head>
 <body class="container py-5">
 <table class="table table-striped table-hover caption-top">
-    <caption>Users</caption>
+    <caption>Interior companies in Lagos</caption>
     <thead>
     <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">Address</th>
-        <th scope="col">Link</th>
+        <th scope="col">Website</th>
+        <th scope="col">Phone</th>
     </tr>
     </thead>
     <tbody>
@@ -22,9 +23,14 @@
         @if($company != null)
             <tr>
                 <th scope="row">{{ $loop->iteration }}</th>
-                <td>{{ $company['name'] }}</td>
+                <td>
+                    <a href="{{ $company['link'] }}" target="_blank">{{ $company['name'] }}</a>
+                </td>
                 <td>{{ $company['address'] }}</td>
-                <td>{{ $company['link'] }}</td>
+                <td>
+                    <a href="{{ $company['website'] }}" target="_blank">{{ $company['website'] }}</a>
+                </td>
+                <td>{{ $company['phone'] }}</td>
             </tr>
         @endif
     @empty
